@@ -1,0 +1,183 @@
+._2yq #globalContainer{
+	/* 		width:calc(100% - 205px) !important; */
+	width:100% !important;
+	padding-right:0px;
+}
+._1ql0{
+	width:calc(100% - 200px) !important;
+}
+._1qkx{
+	width:calc(100% - 320px) !important;
+}
+._14iw{
+	left:calc(100% - 312px) !important;
+}
+
+/* 交友邀請 收件欄 通知 toogle ui	 */
+.__tw{
+	width:100%;
+	left:0vw;
+	position:fixed;
+}
+.uiScrollableAreaBody{
+	width:100% !important;
+}
+						.uiScrollableArea.jewelWithEgoUnits.fade.uiScrollableAreaWithShadow.contentAfter{
+	width:100% !important;
+}
+#fbNotificationsFlyout,
+div.toggleTargetClosed:nth-child(3),
+#fbRequestsFlyout{
+	opacity:0.9;
+}
+
+/* topbar	 */
+#blueBarDOMInspector{
+/* 		opacity:0; */
+/* 		transition:opacity 0.4s; */
+}
+#blueBarDOMInspector:hover{
+/* 		opacity:1; */
+}
+._50ti{
+	top:calc(-23px);
+	opacity:0;
+	transition:top 0.2s,opacity 0.2s;
+}
+._50ti:hover{
+	top:0px;
+	opacity:1;
+}
+._2yq ._2t-d{
+	width:100%;
+}
+._585-{
+	max-width:100%;
+}
+.sidebarMode ._50tj{
+	padding-right:0px;
+}
+.beeperNub{
+	margin-right:85px;
+}
+
+/* Home page	 */
+.fbx #globalContainer{
+	width:100%;
+}
+.timelineLayout #contentArea{
+	width:100% !important;
+}
+#recent_capsule_container{
+	width:calc(100% - 340px) !important;
+	margin-right:7px;
+}
+._3qn7{
+/* 		opacity:0.8; */
+	background-color:transparent !important;
+	border-width:0px !important;
+}
+.fixed_elem{
+/* 		opacity:0; */
+/* 		transition:opacity 0.4s; */
+}
+.fixed_elem:hover{
+/* 		opacity:1; */
+}
+
+/* Chat sidebar	 */
+.fbChatSidebar{
+/* 		opacity:0; */
+	transition:right 0.2s;
+	right:-190px;
+}
+.fbChatSidebar:hover{
+/* 		opacity:1; */
+	right:0px;
+}
+.fbChatSidebar,.fbDockChatTabFlyout{
+/* 	opacity:0.4; */
+}
+.fbChatSidebar:hover,.fbDockChatTabFlyout:hover{
+/* 	opacity:1; */
+}
+
+
+/* photo page	 */
+._2w3{
+	width:100%;
+}
+#u_jsonp_18_18{
+	width:100% !important;
+}
+.fbPhotoStarGridElement{
+/* 		width:24%; */
+	position:relative !important;
+	margin-left:0px !important;
+	margin-top:0px !important;
+}
+#pagelet_timeline_medley_photos > div:nth-child(1) > div:nth-child(2) > div:nth-child(1){
+	position:absolute;
+}
+/* front page	 */
+#photos_snowlift{
+/* 		opacity:0.9; */
+}
+._n3{
+	width:calc(100% - 40px);
+}
+.fbPhotoSnowliftContainer.snowliftPayloadRoot.uiContextualLayerParent,
+.fbPhotoSnowliftPopup{
+	width:100% !important;
+}
+/* 	.fbPhotoSnowliftContainer.snowliftPayloadRoot.uiContextualLayerParent, */
+.fbPhotoSnowliftPopup{
+/* 		opacity:0.7; */
+}
+._3qx ._3ixn{
+	background-color:rgba(0, 0, 0, 0.5);
+}
+
+/* messanger	 */
+._1htf,._1ht1{
+	height:auto;
+}
+/* 	https://www.facebook.com/notifications */
+.UIFullPage_Container{
+	width:100%;
+	padding-left:0px;padding-right:0px;
+}
+.sidebarMode #globalContainer{
+	padding-right:0px;
+}
+
+/* https://www.facebook.com/settings	 */
+.hasLeftCol #headerArea,
+.hasLeftCol #contentArea{
+	width:calc(100% - 40px);
+}
+._5zf3,.fbSettingsEditorFields{
+	width:100%;
+}
+.fbSettingsDeviceName,.fbSettingsDeviceTime{
+	width:auto;
+}
+
+/* sub frame in comment	 */
+._3-a6 ._10la._3qr8{
+	max-width:100%;
+}
+
+/* https://www.facebook.com/friends/requests/	 */
+._2tk #globalContainer{
+	width:100%;
+}
+.sidebarMode ._2tk #globalContainer{
+/* 		padding:0px; */
+}
+#content > div > div.lfloat._ohe{
+	width:calc(100% - 310px);
+}
+._5ewh ._5ewg{
+	width:100%;
+}
