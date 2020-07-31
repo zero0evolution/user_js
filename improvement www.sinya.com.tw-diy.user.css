@@ -1,0 +1,28 @@
+/* ==UserStyle==
+@name           improvement https://www.sinya.com.tw/diy
+@namespace      improvement https://www.sinya.com.tw/diy
+@version        1.0.0
+@description    A new userstyle
+@author         zero0evolution
+==/UserStyle== */
+
+@-moz-document domain("www.sinya.com.tw") {
+  /* 在此插入程式碼…… */
+	#header,.fixedTop,footer{
+		position:static;
+	}
+	.rightSide{
+		position:absolute;
+		right:-145px;
+		transition:right 0.25s;
+	}
+	.rightSide:hover{
+		right:0px;
+	}
+	.diyAreas{
+		width:100%;
+	}
+	html{
+		overflow:visible;
+	}
+}
