@@ -7,6 +7,7 @@
 // @include        /^https\:\/\/tw\.manhuagui\.com\/comic\/\d+\/\d+\.html/
 // @grant        none
 // @require      https://zero0evolution.github.io/commonly_used_codes/checkScrollToBottom.js
+// @require      https://zero0evolution.github.io/commonly_used_codes/activeFuncWhenScroll.js
 // @require      https://zero0evolution.github.io/commonly_used_codes/sleep.js
 // @require      https://zero0evolution.github.io/commonly_used_codes/imgWaitToLoaded.js
 // ==/UserScript==
@@ -55,7 +56,7 @@ function init(){
 
 	const m = eval(keyString.match(/\"m\"\:(.*?)(?:\,|\})/)[1])
 
-	window.downloadInfo = {}
+	downloadInfo = {}
 	downloadInfo.name = (bname+"-"+cname)
 	downloadInfo.fileInfos = []
 
@@ -82,45 +83,36 @@ function init(){
 	appendElem.align = "center"
 	appendElem.innerHTML = ""
 
-	let imgCoung = 0
 
+	
+
+	let i = 0
 	async function pasteImg(distance = window.innerHeight){
-		while(checkScrollToBottom(distance)){
-			const fileInfo = downloadInfo.fileInfos.shift()
-			if(fileInfo){
 
-				imgCoung+=1
-				const pageElem = document.createElement("div")
-				pageElem.textContent = ("00"+String(imgCoung)).slice(-3)
-				appendElem.appendChild(pageElem)
-
-				const imgElem = document.createElement("img")
-				imgElem.dataset.name = fileInfo.name
-				imgElem.dataset.src = fileInfo.link
-				appendElem.appendChild(imgElem)
-				
-				await imgWaitToLoaded(imgElem,imgElem.dataset.src)
-					.catch(error => console.log(error))
-
-				continue
-			}
+		while(checkScrollToBottom(distance) && downloadInfo.length>0){
 			
-			const failedImgs = document.querySelector("img.failed")
-			if(failedImgs.length>0){
-				for(const failedImg of failedImgs){
+			const fileInfo = downloadInfo.fileInfos.shift()
 
-					failedImg.src = ''
-					failedImg.alt = "loading again..."
-					await sleep(3000)
+			i+=1
+			const pageElem = document.createElement("div")
+			pageElem.textContent = ("00"+String(i)).slice(-3)
+			appendElem.appendChild(pageElem)
 
-					await imgWaitToLoaded(failedImg,failedImg.dataset.src)
-						.catch(error => console.log(error))
-				}
-				continue
-			}
+			const imgElem = document.createElement("img")
+			imgElem.dataset.name = fileInfo.name
+			imgElem.dataset.src = fileInfo.link
+			appendElem.appendChild(imgElem)
+			
+			setTimeout(function(){
+				imgElem.style.setProperty("height","auto")
+				imgElem.style.setProperty("width","auto")
+			},50)
+
+			await imgWaitToLoaded(imgElem,fileInfo.link)
+				.catch(error => console.log(error))
 
 			await sleep(500)
-			break
+			await pasteImg()
 		}
 	}
 
@@ -129,4 +121,23 @@ function init(){
 	activeFuncWhenScrollToBottom(
 		pasteImg,window.innerHeight
 	)
+
+
+	async function loadErrorImgAgain(){
+		const failedImgs = document.querySelector("img.failed")
+		for(const failedImg of failedImgs){
+			const src = failedImg.dataset.src
+			failedImg.src = ''
+			failedImg.alt = "loading again..."
+
+			await imgWaitToLoaded(failedImg,src)
+				.catch(error => console.log(error))
+			
+			await sleep(500)
+		}
+		await sleep(3000)
+	}
+
+	activeFuncWhenScroll(loadErrorImgAgain)
+	
 }

@@ -4,7 +4,7 @@
 // @version      0.5
 // @description  sort price in pchome
 // @author       zero0evolution
-// @include      /^https\:\/\/(?:24h|shopping)\.pchome\.com\.tw\/store\/\w+$/
+// @include      /^https\:\/\/(?:24h|shopping)\.pchome\.com\.tw\/store\/\w+/
 // @run-at       document-start
 // @require      https://zero0evolution.github.io/commonly_used_codes/sleep.js
 // @require      https://zero0evolution.github.io/commonly_used_codes/checkScrollToBottom.js
@@ -42,6 +42,7 @@ async function initFunc(){
 	await clickListStyleElem()
 	await setLinkNewTabFunc()
 	await sortFunc()
+	await hide_CCP_product()
 }
 
 titleElemMutationObserver()
@@ -130,5 +131,49 @@ async function sortFunc(){
 			}
 		}
 		return(0)
+	}
+}
+
+async function add_ccp_product_style(){
+	if(!(document.head instanceof Element)){
+		await sleep(250)
+		add_ccp_product_style()
+	}
+	const ccp_product_style_elem = document.createElement("style")
+	ccp_product_style_elem.innerHTML = `
+		.ccp_product{
+			opacity:0.3;
+			// transition:opacity 0.25s;
+		}
+		// .ccp_product:hover{
+			// opacity:0.8;
+		// }
+	`
+	document.head.appendChild(ccp_product_style_elem)
+}
+add_ccp_product_style()
+	
+const ccp_key_pattern = /聯想|Lenovo|小米|Xiaomi|OPPO|華為|huawei/img
+
+function hide_CCP_product(){
+	// ProdGridContainer
+	const topListElem = document.querySelector("#ProdListContainer")
+
+	if(topListElem instanceof Element){
+		const productElems = topListElem.querySelectorAll("dl[_id]")
+		for(const productElem of productElems){
+			const headerElems = productElem.querySelectorAll("h1,h2,h3,h4,h5")
+			for(const headerElem of headerElems){
+				if(headerElem.textContent.match(ccp_key_pattern)){
+					productElem.classList.add("ccp_product")
+
+					// const frontElem = document.createElement("div")
+					// frontElem.style.setProperty("background-color","black")
+					// frontElem.style.setProperty("z-index","2")
+					// frontElem.style.setProperty("background-color","black")
+					break
+				}
+			}
+		}
 	}
 }
