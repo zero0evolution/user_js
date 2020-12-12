@@ -103,9 +103,12 @@ async function imgViewFullSize(targetImg,link){
 		elem = elem.parentElement
 	}
 
-	if(targetImg.matches("img")){
-		
+	// check if link is not png,jpg, need redirect
+	if(!link.match(/.*\/(.*?\.(?:png|jpg))(?:\?.*)?$/)){
 		link = await getOriginLink(link)
+	}
+
+	if(targetImg.matches("img")){
 
 		await loadImg(link)
 
@@ -155,6 +158,11 @@ async function showFullFunc(linkElem){
 
 	const originHref = linkElem.getAttribute("href")
 
+	if(!originHref){
+		// console.warn(linkElem)
+		return(null)
+	}
+
 	const viewFullSizeTextPattern = /^(?:全尺寸檢視|view full size)$/i
 
 	if(
@@ -172,12 +180,15 @@ async function showFullFunc(linkElem){
 			// parent.appendChild(tempElem.firstElementChild)
 			// targetElem.remove()
 
-			targetElem = await imgViewFullSize(targetElem,linkElem.href)
+			targetElem = await imgViewFullSize(targetElem,linkElem.getAttribute("href"))
 		}
 	}
 
 	const photoLinkPattern = /^\/?(?:photo\.php\?fbid\=|[0-9a-z\.\-\_]+\/photos\/)/i
 	const photoLinkPattern2 = /^\/[0-9a-zA-Z\.]+\/photos\/[0-9a-zA-Z\.]+\/[0-9]+/i
+
+
+	
 
 	if(
 		originHref.match(photoLinkPattern) || 
@@ -213,7 +224,13 @@ async function showFullFunc(linkElem){
 				tempElem.innerHTML = match
 				const fullSizeLinkElem = tempElem.firstElementChild
 				if(fullSizeLinkElem.textContent.match(viewFullSizeTextPattern)){
-					linkElem.innerHTML = `<img src="${fullSizeLinkElem.href}" style="max-width:100%;height:auto;">`
+
+					let fullImgLink = fullSizeLinkElem.getAttribute("href")
+					if(!fullImgLink.match(/.*\/(.*?\.(?:png|jpg))(?:\?.*)?$/)){
+						fullImgLink = await getOriginLink(fullImgLink)
+					}
+					linkElem.innerHTML = `<img src="${fullImgLink}" style="max-width:100%;height:auto;">`
+					// console.log(linkElem.innerHTML)
 					// targetImg = await imgViewFullSize(targetImg,fullSizeLinkElem.href)
 
 					linkElem.parentElement.insertBefore(document.createElement("br"),linkElem.nextElementSibling)
@@ -291,12 +308,12 @@ async function showFullFunc(linkElem){
 
 
 // 挑出所有的連結
-const selectorText = "a[href]"
+// const selectorText = "a[href]"
 async function filterFunc(topElem){
-	if(topElem.matches(selectorText)){
+	if(topElem.matches("a[href]")){
 		await showFullFunc(topElem).catch((err)=>{console.warn(err)})
 	}
-	for(const linkElem of topElem.querySelectorAll(selectorText)){
+	for(const linkElem of topElem.querySelectorAll("a[href]")){
 		await showFullFunc(linkElem).catch((err)=>{console.warn(err)})
 	}
 }
