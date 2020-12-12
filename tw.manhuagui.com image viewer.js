@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         tw.manhuagui.com image viewer
 // @namespace    tw.manhuagui.com image viewer
-// @version      0.4
+// @version      0.5
 // @description  try to take over the world!
 // @author       zero0evolution
 // @include        /^https\:\/\/tw\.manhuagui\.com\/comic\/\d+\/\d+\.html/
@@ -56,7 +56,7 @@ function init(){
 
 	const m = eval(keyString.match(/\"m\"\:(.*?)(?:\,|\})/)[1])
 
-	downloadInfo = {}
+	const downloadInfo = {}
 	downloadInfo.name = (bname+"-"+cname)
 	downloadInfo.fileInfos = []
 
@@ -83,15 +83,18 @@ function init(){
 	appendElem.align = "center"
 	appendElem.innerHTML = ""
 
-
+	console.log("downloadInfo.fileInfos.length",downloadInfo.fileInfos.length)
 	
 
 	let i = 0
 	async function pasteImg(distance = window.innerHeight){
 
-		while(checkScrollToBottom(distance) && downloadInfo.length>0){
-			
+		// console.log(checkScrollToBottom(distance),downloadInfo.fileInfos.length)
+
+		while(checkScrollToBottom(distance) && downloadInfo.fileInfos.length>0){
+
 			const fileInfo = downloadInfo.fileInfos.shift()
+			console.log(fileInfo)
 
 			i+=1
 			const pageElem = document.createElement("div")
@@ -112,7 +115,6 @@ function init(){
 				.catch(error => console.log(error))
 
 			await sleep(500)
-			await pasteImg()
 		}
 	}
 
@@ -124,7 +126,7 @@ function init(){
 
 
 	async function loadErrorImgAgain(){
-		const failedImgs = document.querySelector("img.failed")
+		const failedImgs = document.querySelectorAll("img.failed")
 		for(const failedImg of failedImgs){
 			const src = failedImg.dataset.src
 			failedImg.src = ''
