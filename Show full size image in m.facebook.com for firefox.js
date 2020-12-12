@@ -2,7 +2,7 @@
 // @name        Show full size image in m.facebook.com for firefox
 // @namespace		Show full size image in m.facebook.com for firefox
 // @include     /https\:\/\/m\.facebook\.com\//
-// @version     3.5
+// @version     3.6
 // @author      zero0evolution
 // @description  Show full size image in m.facebook.com.
 // ==/UserScript==
