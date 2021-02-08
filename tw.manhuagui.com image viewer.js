@@ -64,13 +64,19 @@ function init(){
 		const newFileName = decodeURI(
 			fileName.replace(/\.webp$/i,"")
 		)
+
+		// console.log(fileName,"=>",newFileName)
+
+		const link = "https://us.hamreus.com"+
+			path+newFileName+
+			"?e="+String(e)+"&m="+m
+
+		// console.log(newFileName,link)
+
 		downloadInfo.fileInfos.push(
 			{
-				"link":encodeURI(
-					"https://us.hamreus.com"+
-					path+newFileName+
-					"?e="+String(e)+"&m="+m
-				),
+				// "link":encodeURI(link),
+				"link":link,
 				"name":newFileName,
 			}
 		)
@@ -83,7 +89,7 @@ function init(){
 	appendElem.align = "center"
 	appendElem.innerHTML = ""
 
-	console.log("downloadInfo.fileInfos.length",downloadInfo.fileInfos.length)
+	// console.log("downloadInfo.fileInfos.length",downloadInfo.fileInfos.length)
 	
 
 	let i = 0

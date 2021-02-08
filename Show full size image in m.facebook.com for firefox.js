@@ -2,7 +2,7 @@
 // @name        Show full size image in m.facebook.com for firefox
 // @namespace		Show full size image in m.facebook.com for firefox
 // @include     /https\:\/\/m\.facebook\.com\//
-// @version     3.6
+// @version     3.7
 // @author      zero0evolution
 // @description  Show full size image in m.facebook.com.
 // ==/UserScript==
@@ -187,12 +187,13 @@ async function showFullFunc(linkElem){
 	const photoLinkPattern = /^\/?(?:photo\.php\?fbid\=|[0-9a-z\.\-\_]+\/photos\/)/i
 	const photoLinkPattern2 = /^\/[0-9a-zA-Z\.]+\/photos\/[0-9a-zA-Z\.]+\/[0-9]+/i
 
-
+	const photoLinkPattern3 = /^\/photos\/viewer\/\?/
 	
 
 	if(
 		originHref.match(photoLinkPattern) || 
-		originHref.match(photoLinkPattern2)
+		originHref.match(photoLinkPattern2) ||
+		originHref.match(photoLinkPattern3)
 	){
 
 		

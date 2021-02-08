@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name		Fix link in www.facebook.com
-// @version	 1.2
+// @version	 1.3
 // @include		/^https?\:\/\/(?:m|www)\.facebook\.com/
 // @description	連結轉為原網址
 // @author zero0evolution
@@ -58,7 +58,7 @@ function fixAllHref(topElem){
 
 
 function fixHref(elem){
-	const oldHref = elem.href
+	let oldHref = elem.href
 	const linkMatchObj = oldHref.match(
 		/^https\:\/\/lm?\.facebook\.com\/l\.php\?(.*)$/im)
 	if(linkMatchObj){
@@ -73,30 +73,38 @@ function fixHref(elem){
 
 			elem.href = newHref
 
-			// console.log(oldHref)
-			// console.log("==>")
-			// console.log(newHref)
-			// console.log()
+			console.log("更換連結",oldHref,"=>",newHref)
 			return(null)
 		}
 	}
 
-	const videoLinkPatten = /^(.*?\/videos\/\d+)(\/\?.*?)$/im
-	const videoLinkMatchObj = oldHref.match(videoLinkPatten)
+	oldHref = elem.href
+	const fbclidMatchObj = oldHref.match(/fbclid\=.*?(?:\&|$)/im)
+	if(fbclidMatchObj){
+		let newHref = oldHref
+			.replace(/fbclid\=.*?(?:\&|$)/im,"")
+			.replace(/(?:\&|\?)$/im,"")
 
-	if(videoLinkMatchObj){
-		let newHref = videoLinkMatchObj[1]
-		// let newHref = oldHref.replace(videoLinkMatchObj,(matchStr,p1)=>{
-		// 	return("/videos/"+p1)
-		// })
+		console.log("更換連結",oldHref,"=>",newHref)
 		elem.href = newHref
-
-		// console.log(oldHref)
-		// console.log("==>")
-		// console.log(newHref)
-		// console.log()
-		return(null)
 	}
+
+	// const videoLinkPatten = /^(.*?\/videos\/\d+)(\/\?.*?)$/im
+	// const videoLinkMatchObj = oldHref.match(videoLinkPatten)
+
+	// if(videoLinkMatchObj){
+	// 	let newHref = videoLinkMatchObj[1]
+	// 	// let newHref = oldHref.replace(videoLinkMatchObj,(matchStr,p1)=>{
+	// 	// 	return("/videos/"+p1)
+	// 	// })
+	// 	elem.href = newHref
+
+	// 	// console.log(oldHref)
+	// 	// console.log("==>")
+	// 	// console.log(newHref)
+	// 	// console.log()
+	// 	return(null)
+	// }
 }
 
 

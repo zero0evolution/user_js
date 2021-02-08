@@ -4,7 +4,7 @@
 // @version      0.3
 // @description  download novel in esjzone
 // @author       zero0evolution
-// @include      /^https\:\/\/www\.esjzone\.cc\//
+// @include      /^https\:\/\/(www\.)?esjzone\.cc\//
 // @run-at       document-start
 // @require      https://zero0evolution.github.io/commonly_used_codes/s2t.js
 // @require      https://zero0evolution.github.io/commonly_used_codes/getHTML.js
