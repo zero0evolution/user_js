@@ -67,15 +67,16 @@ function init(){
 
 		// console.log(fileName,"=>",newFileName)
 
-		const link = "https://us.hamreus.com"+
+		let link = "https://us.hamreus.com"+
 			path+newFileName+
 			"?e="+String(e)+"&m="+m
 
+		link = encodeURI(link)
+		link = link.replace(/\%25/mg,"%")
 		// console.log(newFileName,link)
 
 		downloadInfo.fileInfos.push(
 			{
-				// "link":encodeURI(link),
 				"link":link,
 				"name":newFileName,
 			}
