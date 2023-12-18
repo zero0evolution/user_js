@@ -1,11 +1,14 @@
 // ==UserScript==
 // @name         tw.manhuagui.com image viewer
 // @namespace    tw.manhuagui.com image viewer
-// @version      0.5
+// @version      1.0
 // @description  try to take over the world!
 // @author       zero0evolution
-// @include        /^https\:\/\/tw\.manhuagui\.com\/comic\/\d+\/\d+\.html/
+// @match        https://tw.manhuagui.com/comic/*/*.html
+// @run-at       document-start
+
 // @grant        none
+
 // @require      https://zero0evolution.github.io/commonly_used_codes/checkScrollToBottom.js
 // @require      https://zero0evolution.github.io/commonly_used_codes/activeFuncWhenScroll.js
 // @require      https://zero0evolution.github.io/commonly_used_codes/sleep.js
@@ -17,14 +20,13 @@
 
 
 if(document.readyState === "loading"){
-	window.addEventListener("load", ()=>{
+	window.addEventListener("DOMContentLoaded", ()=>{
 		init()
 	})
 }
 else{
 	init()
 }
-	
 
 function init(){
 	console.log("run tw.manhuagui.com image viewer.js")
@@ -33,43 +35,26 @@ function init(){
 
 	const matchJsCodeObj = targetCode.match(
 		/window\[\"\\x65\\x76\\x61\\x6c\"\](.+)/im)
+	if(!matchJsCodeObj){return(null)}
 
-	if(!matchJsCodeObj){
-		return(null)
-	}
+	let codeStr = eval(matchJsCodeObj[1])
+	codeStr = codeStr.match("\((\{.*\})\)")[1]
+	window.imgData = JSON.parse(codeStr)
 
-	// 處理連結
-	const keyString = eval(matchJsCodeObj[1])
-	// console.log(keyString)
-	
-	const bid = Number(keyString.match(/\"bid\"\:(.*?)(?:\,|\})/)[1])
-	const bname = eval(keyString.match(/\"bname\"\:(.*?)(?:\,|\})/)[1])
-	const cid = Number(keyString.match(/\"cid\"\:(.*?)(?:\,|\})/)[1])
-	const cname = eval(keyString.match(/\"cname\"\:(.*?)(?:\,|\})/)[1])
-	const files = eval(keyString.match(/\"files\"\:(\[.*?\])/)[1])
+	imgData.path = decodeURI(imgData.path)
 
-	const path = decodeURI(
-		eval(keyString.match(/\"path\"\:(.*?)(?:\,|\})/)[1])
-	)
-
-	const e = eval(keyString.match(/\"e\"\:(.*?)(?:\,|\})/)[1])
-
-	const m = eval(keyString.match(/\"m\"\:(.*?)(?:\,|\})/)[1])
-
-	const downloadInfo = {}
-	downloadInfo.name = (bname+"-"+cname)
+	window.downloadInfo = {}
+	downloadInfo.name = (imgData.bname+"-"+imgData.cname)
 	downloadInfo.fileInfos = []
 
-	for(const fileName of files){
-		const newFileName = decodeURI(
-			fileName.replace(/\.webp$/i,"")
-		)
+	for(const fileName of imgData.files){
+		let newFileName = decodeURI(fileName)
 
 		// console.log(fileName,"=>",newFileName)
 
-		let link = "https://us.hamreus.com"+
-			path+newFileName+
-			"?e="+String(e)+"&m="+m
+		let link = "https://eu.hamreus.com"+
+			imgData.path+newFileName+
+			"?e="+String(imgData.sl.e)+"&m="+imgData.sl.m
 
 		link = encodeURI(link)
 		link = link.replace(/\%25/mg,"%")
@@ -78,11 +63,10 @@ function init(){
 		downloadInfo.fileInfos.push(
 			{
 				"link":link,
-				"name":newFileName,
+				"name":newFileName.replace(/\.webp$/i,""),
 			}
 		)
 	}
-
 	// console.log(downloadInfo)
 
 	const tbBox = document.querySelector('#tbBox')
@@ -90,63 +74,26 @@ function init(){
 	appendElem.align = "center"
 	appendElem.innerHTML = ""
 
-	// console.log("downloadInfo.fileInfos.length",downloadInfo.fileInfos.length)
-	
-
-	let i = 0
-	async function pasteImg(distance = window.innerHeight){
-
-		// console.log(checkScrollToBottom(distance),downloadInfo.fileInfos.length)
-
-		while(checkScrollToBottom(distance) && downloadInfo.fileInfos.length>0){
-
-			const fileInfo = downloadInfo.fileInfos.shift()
-			console.log(fileInfo)
-
-			i+=1
-			const pageElem = document.createElement("div")
-			pageElem.textContent = ("00"+String(i)).slice(-3)
-			appendElem.appendChild(pageElem)
-
-			const imgElem = document.createElement("img")
-			imgElem.dataset.name = fileInfo.name
-			imgElem.dataset.src = fileInfo.link
-			appendElem.appendChild(imgElem)
-			
-			setTimeout(function(){
-				imgElem.style.setProperty("height","auto")
-				imgElem.style.setProperty("width","auto")
-			},50)
-
-			await imgWaitToLoaded(imgElem,fileInfo.link)
-				.catch(error => console.log(error))
-
-			await sleep(500)
-		}
+	for(let i = 0;i<downloadInfo.fileInfos.length;i++){
+		const pageElem = document.createElement("div")
+		pageElem.innerHTML = `<a href="${downloadInfo.fileInfos[i].link}">${downloadInfo.fileInfos[i].name}</a>`
+		appendElem.appendChild(pageElem)
 	}
 
-	pasteImg()
 
-	activeFuncWhenScrollToBottom(
-		pasteImg,window.innerHeight
-	)
+	const btnElem = document.querySelector(".main-btn")
+	const prevBtnElem = btnElem.querySelector("a.prevC")
+	const newPrevBtnElem = prevBtnElem.cloneNode(true)
+	prevBtnElem.remove()
+	newPrevBtnElem.href = document.URL.replace(imgData.cid,imgData.prevId)
 
+	const nextBtnElem = btnElem.querySelector("a.nextC")
+	const newNextBtnElem = nextBtnElem.cloneNode(true)
+	nextBtnElem.remove()
+	newNextBtnElem.href = document.URL.replace(imgData.cid,imgData.nextId)
 
-	async function loadErrorImgAgain(){
-		const failedImgs = document.querySelectorAll("img.failed")
-		for(const failedImg of failedImgs){
-			const src = failedImg.dataset.src
-			failedImg.src = ''
-			failedImg.alt = "loading again..."
-
-			await imgWaitToLoaded(failedImg,src)
-				.catch(error => console.log(error))
-			
-			await sleep(500)
-		}
-		await sleep(3000)
-	}
-
-	activeFuncWhenScroll(loadErrorImgAgain)
+	btnElem.innerHTML = ""
+	btnElem.appendChild(newPrevBtnElem)
+	btnElem.appendChild(newNextBtnElem)
 	
 }
